@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class ParticipantRepositoryTest {
+class ParticipantRepositoryTest extends RepositoryTest {
 
     @Autowired
     private ParticipantRepository participantRepository;

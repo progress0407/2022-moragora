@@ -2,6 +2,7 @@ package com.woowacourse.moragora.acceptance;
 
 import com.woowacourse.auth.dto.LoginRequest;
 import com.woowacourse.moragora.dto.UserRequest;
+import com.woowacourse.utils.InitialTestDataConfig;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -9,12 +10,14 @@ import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@Import(InitialTestDataConfig.class)
 public class AcceptanceTest {
     @LocalServerPort
     int port;

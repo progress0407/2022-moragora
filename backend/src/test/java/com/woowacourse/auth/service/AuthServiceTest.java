@@ -7,16 +7,16 @@ import com.woowacourse.auth.dto.LoginRequest;
 import com.woowacourse.auth.dto.LoginResponse;
 import com.woowacourse.auth.exception.LoginFailException;
 import com.woowacourse.moragora.dto.UserRequest;
+import com.woowacourse.moragora.service.ServiceTest;
 import com.woowacourse.moragora.service.UserService;
+import java.security.Provider.Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-public class AuthServiceTest {
+public class AuthServiceTest extends ServiceTest {
 
     @Autowired
     private AuthService authService;

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class UserServiceTest {
+class UserServiceTest extends ServiceTest {
 
     @Autowired
     private UserService userService;

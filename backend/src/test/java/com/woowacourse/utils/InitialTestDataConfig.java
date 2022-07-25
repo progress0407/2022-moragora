@@ -1,4 +1,4 @@
-package com.woowacourse;
+package com.woowacourse.utils;
 
 import com.woowacourse.moragora.entity.Attendance;
 import com.woowacourse.moragora.entity.Meeting;
@@ -12,19 +12,27 @@ import com.woowacourse.moragora.repository.ParticipantRepository;
 import com.woowacourse.moragora.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.springframework.context.ApplicationListener;
+import javax.annotation.PostConstruct;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
 
-@Component
-public class ApplicationStartupRunner implements ApplicationListener<ContextRefreshedEvent> {
+/**
+ * 초기 테스트 데이터 설정 파일
+ *
+ * Initial test data configuration file
+ *
+ *
+ */
+
+@TestConfiguration
+public class InitialTestDataConfig {
 
     private final MeetingRepository meetingRepository;
     private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
     private final ParticipantRepository participantRepository;
 
-    public ApplicationStartupRunner(final MeetingRepository meetingRepository,
+    public InitialTestDataConfig(final MeetingRepository meetingRepository,
                                     final UserRepository userRepository,
                                     final AttendanceRepository attendanceRepository,
                                     final ParticipantRepository participantRepository) {
@@ -34,8 +42,8 @@ public class ApplicationStartupRunner implements ApplicationListener<ContextRefr
         this.participantRepository = participantRepository;
     }
 
-    @Override
-    public void onApplicationEvent(final ContextRefreshedEvent event) {
+    @PostConstruct
+    public void onTestStartEvent() {
 
         final User user1 = new User("aaa111@foo.com", EncodedPassword.fromRawValue("1234smart!"), "아스피");
         final User user2 = new User("bbb222@foo.com", EncodedPassword.fromRawValue("1234smart!"), "필즈");
