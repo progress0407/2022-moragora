@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional(readOnly = true)
-public class AttendanceRepository {
+public class AttendanceHibernateRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public AttendanceRepository(final EntityManager entityManager) {
+    public AttendanceHibernateRepository(final EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

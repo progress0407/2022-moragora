@@ -17,7 +17,7 @@ import com.woowacourse.moragora.exception.IllegalParticipantException;
 import com.woowacourse.moragora.exception.MeetingNotFoundException;
 import com.woowacourse.moragora.exception.ParticipantNotFoundException;
 import com.woowacourse.moragora.exception.UserNotFoundException;
-import com.woowacourse.moragora.repository.AttendanceRepository;
+import com.woowacourse.moragora.repository.AttendanceSpringJpaRepository;
 import com.woowacourse.moragora.repository.MeetingRepository;
 import com.woowacourse.moragora.repository.ParticipantRepository;
 import com.woowacourse.moragora.repository.UserRepository;
@@ -42,14 +42,14 @@ public class MeetingService {
 
     private final MeetingRepository meetingRepository;
     private final ParticipantRepository participantRepository;
-    private final AttendanceRepository attendanceRepository;
+    private final AttendanceSpringJpaRepository attendanceRepository;
     private final UserRepository userRepository;
     private final TimeChecker timeChecker;
     private final CurrentDateTime currentDateTime;
 
     public MeetingService(final MeetingRepository meetingRepository,
                           final ParticipantRepository participantRepository,
-                          final AttendanceRepository attendanceRepository,
+                          final AttendanceSpringJpaRepository attendanceRepository,
                           final UserRepository userRepository,
                           final TimeChecker timeChecker, final CurrentDateTime currentDateTime) {
         this.meetingRepository = meetingRepository;
@@ -216,7 +216,7 @@ public class MeetingService {
                 .collect(Collectors.toList());
         final LocalDate today = now.toLocalDate();
         final List<Attendance> attendances =
-                attendanceRepository.findByParticipantIdsAndAttendanceDate(participantIds, today);
+                attendanceRepository.findByParticipantIdInAndAttendanceDate(participantIds, today);
 
         if (attendances.size() == 0) {
             saveAttendances(participants, today);
@@ -230,6 +230,6 @@ public class MeetingService {
     }
 
     private long getMeetingAttendanceCount(final Participant anyParticipant) {
-        return attendanceRepository.findAttendanceCountById(anyParticipant.getId());
+        return attendanceRepository.countByParticipantId(anyParticipant.getId());
     }
 }

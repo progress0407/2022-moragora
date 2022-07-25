@@ -12,11 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "attendance")
 @NoArgsConstructor
 @Getter
+@ToString(exclude = "participant")
 public class Attendance {
 
     @Id
