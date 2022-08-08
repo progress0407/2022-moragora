@@ -1,0 +1,30 @@
+[2022-08-08 16:23:54:856 ] [main] [org.springframework.boot.StartupInfoLogger.logStarting:55] - Starting MoragoraApplication using Java 11.0.14 on DESKTOP-ITHUQUS with PID 21116 (C:\dev\1. intelliJ-workspace\wooteco\wooteco-level3-4\moragora\backend\out\production\classes started by progr in C:\dev\1. intelliJ-workspace\wooteco\wooteco-level3-4\moragora\backend)
+[2022-08-08 16:23:54:855 ] [background-preinit] [org.hibernate.validator.internal.util.Version.<clinit>:21] - HV000001: Hibernate Validator 6.2.3.Final
+[2022-08-08 16:23:54:859 ] [main] [org.springframework.boot.SpringApplication.logStartupProfileInfo:645] - No active profile set, falling back to 1 default profile: "default"
+[2022-08-08 16:23:55:2094] [main] [org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn:132] - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2022-08-08 16:23:55:2216] [main] [org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn:201] - Finished Spring Data repository scanning in 111 ms. Found 5 JPA repository interfaces.
+[2022-08-08 16:23:56:3005] [main] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize:108] - Tomcat initialized with port(s): 8080 (http)
+[2022-08-08 16:23:56:3015] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Initializing ProtocolHandler ["http-nio-8080"]
+[2022-08-08 16:23:56:3016] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Starting service [Tomcat]
+[2022-08-08 16:23:56:3016] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Starting Servlet engine: [Apache Tomcat/9.0.64]
+[2022-08-08 16:23:56:3159] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Initializing Spring embedded WebApplicationContext
+[2022-08-08 16:23:56:3160] [main] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.prepareWebApplicationContext:290] - Root WebApplicationContext: initialization completed in 2254 ms
+[2022-08-08 16:23:56:3330] [main] [org.hibernate.jpa.internal.util.LogHelper.logPersistenceUnitInformation:31] - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2022-08-08 16:23:56:3388] [main] [org.hibernate.Version.logVersion:44] - HHH000412: Hibernate ORM core version 5.6.9.Final
+[2022-08-08 16:23:56:3549] [main] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager.<clinit>:56] - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2022-08-08 16:23:57:3666] [main] [com.zaxxer.hikari.HikariDataSource.getConnection:110] - HikariPool-1 - Starting...
+[2022-08-08 16:23:57:3790] [main] [com.zaxxer.hikari.HikariDataSource.getConnection:123] - HikariPool-1 - Start completed.
+[2022-08-08 16:23:57:3811] [main] [org.hibernate.dialect.Dialect.<init>:175] - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[2022-08-08 16:23:58:4741] [main] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator.initiateService:52] - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-08-08 16:23:58:4752] [main] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory:437] - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2022-08-08 16:23:59:6425] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Starting ProtocolHandler ["http-nio-8080"]
+[2022-08-08 16:23:59:6434] [main] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.destroy:651] - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2022-08-08 16:23:59:6435] [main] [com.zaxxer.hikari.HikariDataSource.close:350] - HikariPool-1 - Shutdown initiated...
+[2022-08-08 16:23:59:6439] [main] [com.zaxxer.hikari.HikariDataSource.close:352] - HikariPool-1 - Shutdown completed.
+[2022-08-08 16:23:59:6440] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Pausing ProtocolHandler ["http-nio-8080"]
+[2022-08-08 16:23:59:6441] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Stopping service [Tomcat]
+[2022-08-08 16:23:59:6445] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Stopping ProtocolHandler ["http-nio-8080"]
+[2022-08-08 16:23:59:6445] [main] [org.apache.juli.logging.DirectJDKLog.log:173] - Destroying ProtocolHandler ["http-nio-8080"]
+[2022-08-08 16:23:59:6450] [main] [org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener.logMessage:136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
