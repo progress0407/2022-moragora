@@ -14,11 +14,14 @@ import com.woowacourse.moragora.repository.ParticipantRepository;
 import com.woowacourse.moragora.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class ApplicationStartupRunner implements ApplicationListener<ContextRefreshedEvent> {
 
     private final MeetingRepository meetingRepository;
@@ -26,6 +29,9 @@ public class ApplicationStartupRunner implements ApplicationListener<ContextRefr
     private final AttendanceRepository attendanceRepository;
     private final ParticipantRepository participantRepository;
     private final EventRepository eventRepository;
+
+    @Value("constant.local")
+    private String env;
 
     public ApplicationStartupRunner(final MeetingRepository meetingRepository,
                                     final UserRepository userRepository,
@@ -41,6 +47,8 @@ public class ApplicationStartupRunner implements ApplicationListener<ContextRefr
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
+
+        log.info("-------- #env : {} -------- ", env);
 
         final User user1 = new User("aaa111@foo.com", EncodedPassword.fromRawValue("1234smart!"), "아스피");
         final User user2 = new User("bbb222@foo.com", EncodedPassword.fromRawValue("1234smart!"), "필즈");
