@@ -30,7 +30,7 @@ public class ApplicationStartupRunner implements ApplicationListener<ContextRefr
     private final ParticipantRepository participantRepository;
     private final EventRepository eventRepository;
 
-    @Value("constant.env")
+    @Value("${constant.env}")
     private String env;
 
     public ApplicationStartupRunner(final MeetingRepository meetingRepository,
