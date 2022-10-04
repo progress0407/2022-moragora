@@ -38,4 +38,14 @@ public class ParticipantResponse {
                 tardyCount,
                 participant.getIsMaster());
     }
+
+    public static ParticipantResponse of(final Participant participant) {
+        final User user = participant.getUser();
+        return new ParticipantResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getNickname(),
+                participant.getTardyCount(),
+                participant.getIsMaster());
+    }
 }

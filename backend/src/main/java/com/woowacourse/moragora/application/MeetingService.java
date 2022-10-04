@@ -10,6 +10,7 @@ import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.meeting.MeetingRepository;
 import com.woowacourse.moragora.domain.participant.Participant;
 import com.woowacourse.moragora.domain.participant.ParticipantRepository;
+import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.domain.user.UserRepository;
 import com.woowacourse.moragora.dto.request.meeting.MasterRequest;
@@ -45,6 +46,7 @@ public class MeetingService {
     private final ParticipantRepository participantRepository;
     private final AttendanceRepository attendanceRepository;
     private final UserRepository userRepository;
+    private final QueryRepository queryRepository;
     private final ServerTimeManager serverTimeManager;
 
     public MeetingService(final MeetingRepository meetingRepository,
@@ -52,12 +54,13 @@ public class MeetingService {
                           final ParticipantRepository participantRepository,
                           final AttendanceRepository attendanceRepository,
                           final UserRepository userRepository,
-                          final ServerTimeManager serverTimeManager) {
+                          final QueryRepository queryRepository, final ServerTimeManager serverTimeManager) {
         this.meetingRepository = meetingRepository;
         this.eventRepository = eventRepository;
         this.participantRepository = participantRepository;
         this.attendanceRepository = attendanceRepository;
         this.userRepository = userRepository;
+        this.queryRepository = queryRepository;
         this.serverTimeManager = serverTimeManager;
     }
 
@@ -78,23 +81,27 @@ public class MeetingService {
     }
 
     public MeetingResponse findById(final Long meetingId, final Long loginId) {
-        final Meeting meeting = meetingRepository.findById(meetingId)
+        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
-        final Participant participant = participantRepository.findByMeetingIdAndUserId(meeting.getId(), loginId)
+        final Participant loginParticipant = meeting.findParticipant(loginId)
                 .orElseThrow(ParticipantNotFoundException::new);
-
         final LocalDate today = serverTimeManager.getDate();
-        final MeetingAttendances meetingAttendances = getMeetingAttendances(meeting, today);
 
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
-        final Optional<Event> event = eventRepository.findByMeetingIdAndDate(meeting.getId(), today);
-        final boolean isActive = event.isPresent() && serverTimeManager.isAttendanceOpen(event.get().getStartTime());
+
+        meeting.calculateTardy();
+
+        List<ParticipantResponse> participantResponses =
+                meeting.getParticipants().stream()
+                        .map(ParticipantResponse::of)
+                        .collect(Collectors.toUnmodifiableList());
 
         return MeetingResponse.from(
-                meeting, attendedEventCount, participant.getIsMaster(),
-                meetingAttendances.isTardyStackFull(),
-                isActive, collectParticipantResponsesOf(meeting, meetingAttendances)
-        );
+                meeting,
+                attendedEventCount,
+                loginParticipant.getIsMaster(),
+                meeting.isTardyStackFull(),
+                participantResponses);
     }
 
     public MyMeetingsResponse findAllByUserId(final Long userId) {

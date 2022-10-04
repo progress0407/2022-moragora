@@ -55,6 +55,14 @@ public class Attendance {
         this.event = event;
     }
 
+    public void mapParticipant(Participant participant) {
+        this.participant = participant;
+
+        if (!participant.getAttendances().contains(this)) {
+            participant.getAttendances().add(this);
+        }
+    }
+
     public void changeAttendanceStatus(final Status status) {
         this.status = status;
     }

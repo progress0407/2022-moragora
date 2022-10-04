@@ -16,6 +16,9 @@ spring:
   datasource:
     hikari:
       maximum-pool-size: 20
+  properties:
+    hibernate:
+      default_batch_fetch_size: 100
 
 logging:
   level:

@@ -18,7 +18,6 @@ public class MeetingResponse {
     private final long attendedEventCount;
     private final Boolean isLoginUserMaster;
     private final Boolean isCoffeeTime;
-    private final Boolean isActive;
     private final List<ParticipantResponse> users;
 
     @Builder
@@ -27,14 +26,12 @@ public class MeetingResponse {
                            final long attendedEventCount,
                            final Boolean isLoginUserMaster,
                            final Boolean isCoffeeTime,
-                           final Boolean isActive,
                            final List<ParticipantResponse> participantResponses) {
         this.id = id;
         this.name = name;
         this.attendedEventCount = attendedEventCount;
         this.isLoginUserMaster = isLoginUserMaster;
         this.isCoffeeTime = isCoffeeTime;
-        this.isActive = isActive;
         this.users = participantResponses;
     }
 
@@ -42,7 +39,6 @@ public class MeetingResponse {
                                        final long attendedEventCount,
                                        final boolean isLoginUserMaster,
                                        final boolean isCoffeeTime,
-                                       final boolean isActive,
                                        final List<ParticipantResponse> participantResponses) {
         return new MeetingResponse(
                 meeting.getId(),
@@ -50,7 +46,6 @@ public class MeetingResponse {
                 attendedEventCount,
                 isLoginUserMaster,
                 isCoffeeTime,
-                isActive,
                 participantResponses
         );
     }

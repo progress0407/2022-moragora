@@ -183,7 +183,41 @@ class MeetingServiceTest {
                 .participantResponses(List.of(ParticipantResponse.of(participant, 3)))
                 .attendedEventCount(3)
                 .isCoffeeTime(true)
-                .isActive(false)
+                .isLoginUserMaster(true)
+                .build();
+
+        final LocalDateTime dateTime = LocalDateTime.of(2022, 8, 4, 10, 6);
+        serverTimeManager.refresh(dateTime);
+
+        // when
+        final MeetingResponse response = meetingService.findById(meeting.getId(), user.getId());
+
+        // then
+        assertThat(response).usingRecursiveComparison()
+                .ignoringFields("users")
+                .isEqualTo(expectedMeetingResponse);
+    }
+
+    @DisplayName("id로 모임 상세 정보를 조회한다.")
+    @Test
+    void findById_2() {
+        // given
+        final Meeting meeting = dataSupport.saveMeeting(MORAGORA.create());
+        final User user = dataSupport.saveUser(KUN.create());
+        final Participant participant = dataSupport.saveParticipant(user, meeting, true);
+        final Event event1 = dataSupport.saveEvent(EVENT1.create(meeting));
+        final Event event2 = dataSupport.saveEvent(EVENT2.create(meeting));
+        final Event event3 = dataSupport.saveEvent(EVENT3.create(meeting));
+        dataSupport.saveAttendance(participant, event1, Status.TARDY);
+        dataSupport.saveAttendance(participant, event2, Status.TARDY);
+        dataSupport.saveAttendance(participant, event3, Status.TARDY);
+
+        final MeetingResponse expectedMeetingResponse = MeetingResponse.builder()
+                .id(meeting.getId())
+                .name(meeting.getName())
+                .participantResponses(List.of(ParticipantResponse.of(participant, 3)))
+                .attendedEventCount(3)
+                .isCoffeeTime(true)
                 .isLoginUserMaster(true)
                 .build();
 
@@ -220,7 +254,6 @@ class MeetingServiceTest {
                 .participantResponses(List.of(ParticipantResponse.of(participant, 3)))
                 .attendedEventCount(3)
                 .isCoffeeTime(true)
-                .isActive(false)
                 .isLoginUserMaster(false)
                 .build();
 
@@ -269,7 +302,6 @@ class MeetingServiceTest {
                 .participantResponses(usersResponse)
                 .attendedEventCount(1)
                 .isCoffeeTime(false)
-                .isActive(true)
                 .isLoginUserMaster(true)
                 .build();
 
@@ -317,7 +349,6 @@ class MeetingServiceTest {
                 .participantResponses(usersResponse)
                 .attendedEventCount(1)
                 .isCoffeeTime(true)
-                .isActive(false)
                 .isLoginUserMaster(true)
                 .build();
 
@@ -348,7 +379,6 @@ class MeetingServiceTest {
                 .name(meeting.getName())
                 .attendedEventCount(1)
                 .isCoffeeTime(false)
-                .isActive(true)
                 .isLoginUserMaster(true)
                 .build();
 
@@ -379,7 +409,6 @@ class MeetingServiceTest {
                 .name(meeting.getName())
                 .attendedEventCount(1)
                 .isCoffeeTime(false)
-                .isActive(false)
                 .isLoginUserMaster(true)
                 .build();
 
