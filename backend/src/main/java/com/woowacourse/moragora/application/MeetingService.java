@@ -81,27 +81,21 @@ public class MeetingService {
     }
 
     public MeetingResponse findById(final Long meetingId, final Long loginId) {
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
+        final Meeting meeting =
+                queryRepository.findMeetingAndAllChild(meetingId)
+                        .orElseThrow(MeetingNotFoundException::new);
         final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
+                        .orElseThrow(ParticipantNotFoundException::new);
         final LocalDate today = serverTimeManager.getDate();
-
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
 
         meeting.calculateTardy();
 
-        List<ParticipantResponse> participantResponses =
-                meeting.getParticipants().stream()
-                        .map(ParticipantResponse::of)
-                        .collect(Collectors.toUnmodifiableList());
-
         return MeetingResponse.from(
                 meeting,
                 attendedEventCount,
-                loginParticipant.getIsMaster(),
-                meeting.isTardyStackFull(),
-                participantResponses);
+                loginParticipant.getIsMaster()
+        );
     }
 
     public MyMeetingsResponse findAllByUserId(final Long userId) {
@@ -230,11 +224,14 @@ public class MeetingService {
 
         final Optional<Event> upcomingEvent = eventRepository
                 .findFirstByMeetingIdAndDateGreaterThanEqualOrderByDate(meeting.getId(), today);
+
         if (upcomingEvent.isEmpty()) {
+            find
             return MyMeetingResponse.of(
                     meeting, tardyCount, isLoginUserMaster, isCoffeeTime, false, null
             );
         }
+
         final Event event = upcomingEvent.get();
         final LocalTime startTime = event.getStartTime();
         final boolean isActive = event.isSameDate(today) && serverTimeManager.isAttendanceOpen(startTime);

@@ -91,7 +91,7 @@ public class Meeting {
                 .sum();
 
         if (this.totalTardyCount >= participants.size()) {
-            isTardyStackFull = true;
+            this.isTardyStackFull = true;
         }
     }
 }

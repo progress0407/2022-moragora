@@ -16,7 +16,6 @@ public interface QueryRepository extends Repository<Meeting, Long> {
     @Query(
             "select m from Meeting m"
                     + " join fetch m.participants p"
-//                    + " join fetch p.attendances a"
                     + " where m.id = :id"
     )
     Optional<Meeting> findMeetingAndAllChild(@Param("id") final Long id);

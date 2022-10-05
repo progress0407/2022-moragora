@@ -37,16 +37,14 @@ public class MeetingResponse {
 
     public static MeetingResponse from(final Meeting meeting,
                                        final long attendedEventCount,
-                                       final boolean isLoginUserMaster,
-                                       final boolean isCoffeeTime,
-                                       final List<ParticipantResponse> participantResponses) {
+                                       final boolean isLoginUserMaster) {
         return new MeetingResponse(
                 meeting.getId(),
                 meeting.getName(),
                 attendedEventCount,
                 isLoginUserMaster,
-                isCoffeeTime,
-                participantResponses
+                meeting.isTardyStackFull(),
+                ParticipantResponses.create(meeting)
         );
     }
 }
