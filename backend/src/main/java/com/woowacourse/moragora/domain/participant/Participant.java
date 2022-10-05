@@ -2,6 +2,7 @@ package com.woowacourse.moragora.domain.participant;
 
 import com.woowacourse.moragora.domain.attendance.Attendance;
 import com.woowacourse.moragora.domain.meeting.Meeting;
+import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "participant")
@@ -44,9 +46,10 @@ public class Participant {
     private Meeting meeting;
 
     @OneToMany(mappedBy = "participant")
-    private final Set<Attendance> attendances = new HashSet<>();
+    private final List<Attendance> attendances = new ArrayList<>();
 
     @Transient
+    @Setter
     private int tardyCount;
 
     public Participant(final User user, final Meeting meeting, final boolean isMaster) {

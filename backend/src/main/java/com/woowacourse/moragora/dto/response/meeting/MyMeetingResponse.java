@@ -48,4 +48,20 @@ public class MyMeetingResponse {
                 upcomingEvent
         );
     }
+
+    public static MyMeetingResponse of(final Meeting meeting,
+                                       final boolean isLoginUserMaster,
+                                       final boolean isActive,
+                                       final EventResponse upcomingEvent) {
+
+        return new MyMeetingResponse(
+                meeting.getId(),
+                meeting.getName(),
+                meeting.getTotalTardyCount(),
+                isLoginUserMaster,
+                meeting.isTardyStackFull(),
+                isActive,
+                upcomingEvent
+        );
+    }
 }

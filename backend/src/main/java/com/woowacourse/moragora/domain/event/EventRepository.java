@@ -14,7 +14,8 @@ public interface EventRepository extends Repository<Event, Long> {
 
     List<Event> saveAll(final Iterable<Event> events);
 
-    long countByMeetingIdAndDateLessThanEqual(final Long meetingId, final LocalDate date);
+    @Query("select count(e) from Event e where e.meeting.id = :meetingId and e.date <= :date")
+    long countByMeetingIdAndDateLessThanEqual(@Param("meetingId") final Long meetingId, @Param("date") final LocalDate date);
 
     Optional<Event> findFirstByMeetingIdAndDateGreaterThanEqualOrderByDate(final Long meetingId, final LocalDate date);
 
