@@ -2,10 +2,9 @@ package com.woowacourse.moragora.domain.query;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.ParticipantRepoDto;
+import com.woowacourse.moragora.domain.participant.ParticipantRepoCarrier;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -59,24 +58,14 @@ public interface QueryRepository extends Repository<Meeting, Long> {
             + " group by p ")
     List<Object[]> findParticipantAndAttendanceCount2(@Param("participantIds") List<Long> participantIds);
 
-    @Query("select p.id, count(a) "
-            + "  from Participant p "
-            + " left join p.attendances a "
-            + "  where p.id in :participantIds "
-            + "    and a.status = 'TARDY' "
-            + "    and a.disabled = false "
-            + " group by p ")
-    List<Map<Long, Long>> findParticipantAndAttendanceCount3(@Param("participantIds") List<Long> participantIds);
-
-    @Query("select "
-            + " new com.woowacourse.moragora.domain.participant.Participant(p, count(a)) "
+    @Query("select new com.woowacourse.moragora.domain.participant.ParticipantRepoCarrier(p.id, count(a)) "
             + "  from Participant p "
             + " left join p.attendances a "
             + "  where p in :participants "
             + "    and a.status = 'TARDY' "
             + "    and a.disabled = false "
-            + " group by p.id ")
-    List<Participant> findParticipantAndAttendanceCount5(@Param("participants") List<Participant> participants);
+            + " group by p ")
+    List<ParticipantRepoCarrier> findParticipantAndAttendanceCount3(@Param("participants") List<Participant> participants);
 
     @Query("select "
             + " a.participant.id, "

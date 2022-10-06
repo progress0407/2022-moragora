@@ -75,6 +75,10 @@ public class Participant {
         this.isMaster = isMaster;
     }
 
+    public void changeTardyCount(Integer tardyCount) {
+        this.tardyCount = tardyCount;
+    }
+
     public void calculateTardy() {
         this.tardyCount = (int) attendances.stream()
                 .filter(Attendance::isTardy)
