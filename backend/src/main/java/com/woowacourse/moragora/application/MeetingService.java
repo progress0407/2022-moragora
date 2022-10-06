@@ -109,18 +109,7 @@ public class MeetingService {
         final LocalDate today = serverTimeManager.getDate();
 
         // q#1
-        final Participants participants = new Participants(queryRepository.findParticipantAndAll4(meetingId));
-
-        final List<Participant> participantss = queryRepository.findParticipantAndAll4(meetingId);
-        final Meeting meeting2 = participantss.get(0).getMeeting(); // force init
-        final Meeting meeting1 = new Meeting(meeting2.getName(), participantss);
-
-//        meeting1.~~~
-
-//        final Meeting meeting = participants.toMeeting();
-
-//        final Participant loginParticipant = meeting.findParticipant(loginId).orElseThrow(ParticipantNotFoundException::new);
-        // tobe
+        final Participants participants = new Participants(queryRepository.findParticipantAndAll(meetingId));
         final Participant loginParticipant = participants.findParticipant(loginId).orElseThrow(ParticipantNotFoundException::new);
 
         // q#2
@@ -128,10 +117,6 @@ public class MeetingService {
         final Meeting meeting = loginParticipant.getMeeting();
 
         meeting.calculateTardy();
-
-        final Participants participants1 = meeting.getParticipants();// ps
-        participants1.calculateTardy();
-        ps
 
         return MeetingResponse.from(
                 meeting,
