@@ -1,9 +1,12 @@
 package com.woowacourse.moragora.domain.meeting;
 
 import com.woowacourse.moragora.domain.participant.Participant;
+import com.woowacourse.moragora.dto.response.ParticipantRepoDto;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -83,12 +86,35 @@ public class Meeting {
 
     public void calculateTardy() {
         for (final Participant participant : participants) {
-            participant.calculateTardy();
+//            participant.calculateTardy();
+
         }
 
         this.totalTardyCount = participants.stream()
-                .mapToInt(participant -> participant.getTardyCount())
+                .mapToInt(Participant::getTardyCount)
                 .sum();
+
+        if (this.totalTardyCount >= participants.size()) {
+            this.isTardyStackFull = true;
+        }
+    }
+
+    public void calculateTardy(final List<ParticipantRepoDto> participantRepoDtos) {
+        final Map<Long, Integer> cache = new HashMap<>();
+
+        /**
+         * not for 2 nested loop
+         */
+        this.totalTardyCount = 0;
+        for (final ParticipantRepoDto dto : participantRepoDtos) {
+            cache.put(dto.id, dto.tardyCount);
+        }
+
+        for (final Participant participant : participants) {
+            final Integer tardyCount = cache.get(participant.getId());
+            participant.changeTardyCount(tardyCount);
+            totalTardyCount += tardyCount;
+        }
 
         if (this.totalTardyCount >= participants.size()) {
             this.isTardyStackFull = true;

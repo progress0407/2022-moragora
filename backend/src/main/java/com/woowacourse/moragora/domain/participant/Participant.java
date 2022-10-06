@@ -49,8 +49,7 @@ public class Participant {
     private final List<Attendance> attendances = new ArrayList<>();
 
     @Transient
-    @Setter
-    private int tardyCount;
+    private Integer tardyCount;
 
     public Participant(final User user, final Meeting meeting, final boolean isMaster) {
         this.user = user;
@@ -70,10 +69,7 @@ public class Participant {
         this.isMaster = isMaster;
     }
 
-    public void calculateTardy() {
-        this.tardyCount = (int) attendances.stream()
-                .filter(Attendance::isTardy)
-                .filter(Attendance::isEnabled)
-                .count();
+    public void changeTardyCount(final int tardyCount) {
+        this.tardyCount = tardyCount;
     }
 }

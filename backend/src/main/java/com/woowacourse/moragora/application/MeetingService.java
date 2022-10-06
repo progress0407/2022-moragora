@@ -16,6 +16,7 @@ import com.woowacourse.moragora.domain.user.UserRepository;
 import com.woowacourse.moragora.dto.request.meeting.MasterRequest;
 import com.woowacourse.moragora.dto.request.meeting.MeetingRequest;
 import com.woowacourse.moragora.dto.request.meeting.MeetingUpdateRequest;
+import com.woowacourse.moragora.dto.response.ParticipantRepoDto;
 import com.woowacourse.moragora.dto.response.event.EventResponse;
 import com.woowacourse.moragora.dto.response.meeting.MeetingResponse;
 import com.woowacourse.moragora.dto.response.meeting.MyMeetingResponse;
@@ -88,7 +89,7 @@ public class MeetingService {
      * M -> P -> A
      *
      */
-    public MeetingResponse findById_v1_1(final Long meetingId, final Long loginId) {
+    public MeetingResponse findById(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
         final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
@@ -96,77 +97,16 @@ public class MeetingService {
                 .orElseThrow(ParticipantNotFoundException::new);
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
 
-        meeting.calculateTardy();
+        final List<Long> participantIds = meeting.getParticipantIds();
+        List<ParticipantRepoDto> participantRepoDtos = queryRepository.findDtos(participantIds);
+
+        meeting.calculateTardy(participantRepoDtos);
 
         return MeetingResponse.from(
                 meeting,
                 attendedEventCount,
                 loginParticipant.getIsMaster()
         );
-    }
-
-    public MeetingResponse findById_v1_2(final Long meetingId, final Long loginId) {
-        final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-        final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
-        final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
-
-        meeting.calculateTardy();
-
-        return MeetingResponse.from(
-                meeting,
-                attendedEventCount,
-                loginParticipant.getIsMaster()
-        );
-    }
-
-    public MeetingResponse findById_v2(final Long meetingId, final Long loginId) {
-        final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-        final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
-        final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
-
-        meeting.calculateTardy();
-
-        final List<Object[]> tardyCounts = queryRepository.findTardyCount_v2(meeting.getParticipantIds(), today);
-
-        final Participant[] participants = meeting.getParticipants().toArray(Participant[]::new);
-
-        for (int i = 0; i < tardyCounts.size(); i++) {
-            final Participant participant = participants[i];
-            final int tardyCount = (int) tardyCounts.get(i)[0];
-            participant.setTardyCount(tardyCount);
-        }
-
-        return MeetingResponse.from(
-                meeting,
-                attendedEventCount,
-                loginParticipant.getIsMaster()
-        );
-    }
-
-    /**
-     * 썬이 중간에 작성한 것
-     * 1+N 쿼리가 나간다
-     */
-    public MeetingResponse findById_v3(final Long meetingId, final Long loginId) {
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-
-        // ...
-
-//        #1 N개의 쿼리가 나간다
-        meeting.getParticipantIds().forEach(it -> {
-            int size = queryRepository.findTardyCount_single(it, LocalDate.now());
-            System.out.println(size);
-        });
-
-        // ...
-        return null;
     }
 
     public MyMeetingsResponse findAllByUserId(final Long userId) {

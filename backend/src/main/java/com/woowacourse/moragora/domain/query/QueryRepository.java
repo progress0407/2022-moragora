@@ -2,6 +2,7 @@ package com.woowacourse.moragora.domain.query;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.participant.Participant;
+import com.woowacourse.moragora.dto.response.ParticipantRepoDto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -92,4 +93,12 @@ public interface QueryRepository extends Repository<Meeting, Long> {
 
     @Query("select count(a) from Attendance a where a.status = 'TARDY' and a.disabled = false and a.event.date <= :date and a.participant.id = :id")
     int findTardyCount_single(@Param("id") Long id, @Param("date") LocalDate date);
+
+    @Query("select new com.woowacourse.moragora.dto.response.ParticipantRepoDto(p.id, count(a)) "
+            + " from Participant p "
+            + "   left join p.attendances a "
+            + "   left join p.user u "
+            + " where p.id in :participantIds "
+            + " group by p ")
+    List<ParticipantRepoDto> findDtos(@Param("participantIds") List<Long> participantIds);
 }
