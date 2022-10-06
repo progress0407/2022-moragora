@@ -45,7 +45,7 @@ public class MeetingResponse {
                 attendedEventCount,
                 isLoginUserMaster,
                 participants.isTardyStackFull(),
-                ParticipantResponses.create(meeting)
+                ParticipantResponses.create(participants)
         );
     }
 }

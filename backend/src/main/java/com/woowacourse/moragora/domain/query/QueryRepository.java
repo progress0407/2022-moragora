@@ -60,7 +60,7 @@ public interface QueryRepository extends Repository<Meeting, Long> {
 
     @Query("select new com.woowacourse.moragora.domain.participant.ParticipantRepoCarrier(p.id, count(a)) "
             + "  from Participant p "
-            + " left join p.attendances a "
+            + " left join p.attendances a"
             + "  where p in :participants "
             + "    and a.status = 'TARDY' "
             + "    and a.disabled = false "

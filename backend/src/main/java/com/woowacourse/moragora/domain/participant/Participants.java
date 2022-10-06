@@ -46,7 +46,8 @@ public class Participants {
     public void calculateTardy(final QueryRepository queryRepository) {
         final List<ParticipantRepoCarrier> dtos = queryRepository.findParticipantAndAttendanceCount3(participants);
 
-        final Map<Long, Long> cache = dtos.stream()
+        final Map<Long, Long> cache = dtos
+                .stream()
                 .collect(Collectors.toMap(it -> it.id, it -> it.tardyCount));
 
         for (final Participant participant : participants) {
