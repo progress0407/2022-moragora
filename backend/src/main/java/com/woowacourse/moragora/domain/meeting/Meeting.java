@@ -87,16 +87,4 @@ public class Meeting {
                 .filter(participant -> participant.getId().equals(id))
                 .findAny();
     }
-
-    public void calculateTardy() {
-        this.participants.calculateTardy();
-    }
-
-    public boolean isTardyStackFull() {
-        return this.participants.isTardyStackFull();
-    }
-
-    public int getTotalTardyCount() {
-        return this.participants.getTotalTardyCount();
-    }
 }

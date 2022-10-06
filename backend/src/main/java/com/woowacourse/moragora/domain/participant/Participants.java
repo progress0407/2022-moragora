@@ -1,12 +1,13 @@
 package com.woowacourse.moragora.domain.participant;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
+import com.woowacourse.moragora.domain.query.QueryRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,7 +42,9 @@ public class Participants {
                 .build();
     }
 
-    public void calculateTardy() {
+    public void calculateTardy(final QueryRepository queryRepository) {
+        final List<Map<Long, Long>> countMap = queryRepository.findParticipantAndAttendanceCount();
+
         for (final Participant participant : participants) {
             participant.calculateTardy();
         }

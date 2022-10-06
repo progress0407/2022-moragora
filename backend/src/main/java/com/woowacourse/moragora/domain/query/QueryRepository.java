@@ -4,6 +4,7 @@ import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.participant.Participant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,6 +40,13 @@ public interface QueryRepository extends Repository<Meeting, Long> {
     )
     List<Object[]> findParticipantAndAll3(@Param("meetingId") Long meetingId);
 
+    @Query("select p.id, count(a) "
+            + "  from Participant p "
+            + " left join Attendance a "
+            + "  where a.status = 'TARDY' "
+            + "    and a.disabled = false "
+            + "    and a.id in :participantIds")
+    List<Map<Long, Long>> findParticipantAndAttendanceCount(@Param("meetingId") List<Long> participantIds);
 
     @Query("select "
             + " a.participant.id, "

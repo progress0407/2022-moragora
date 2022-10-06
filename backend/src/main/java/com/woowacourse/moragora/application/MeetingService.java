@@ -82,29 +82,6 @@ public class MeetingService {
         return meeting.getId();
     }
 
-    /**
-     * 내가 한 것
-     *
-     * 불필요한 Attendance 쿼리까지 가지고 옴 !
-     * M -> P -> A
-     */
-    public MeetingResponse findById_v1_1(final Long meetingId, final Long loginId) {
-        final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-        final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
-        final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
-
-        meeting.calculateTardy();
-
-        return MeetingResponse.from(
-                meeting,
-                attendedEventCount,
-                loginParticipant.getIsMaster()
-        );
-    }
-
     public MeetingResponse findById(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
 
@@ -116,7 +93,7 @@ public class MeetingService {
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
         final Meeting meeting = loginParticipant.getMeeting();
 
-        meeting.calculateTardy();
+        participants.calculateTardy(queryRepository);
 
         return MeetingResponse.from(
                 meeting,
@@ -133,34 +110,6 @@ public class MeetingService {
                 .collect(Collectors.toList());
 
         return new MyMeetingsResponse(myMeetingResponses);
-    }
-
-    public MyMeetingsResponse findAllByUserId_2(final Long userId) {
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(userId)
-                .orElseThrow(MeetingNotFoundException::new);
-
-        final Participant loginParticipant = meeting.findParticipant(userId)
-                .orElseThrow(ParticipantNotFoundException::new);
-
-        final LocalDate today = serverTimeManager.getDate();
-
-        meeting.calculateTardy();
-
-        final Event event = eventRepository
-                .findFirstByMeetingIdAndDateGreaterThanEqualOrderByDate(meeting.getId(), today).get();
-        final boolean isActive = event.isActive(serverTimeManager);
-        final LocalTime attendanceOpenTime = event.openTime(serverTimeManager);
-        final LocalTime attendanceClosedTime = event.closeTime(serverTimeManager);
-
-        final EventResponse eventResponse = EventResponse.of(event, attendanceOpenTime, attendanceClosedTime);
-        final MyMeetingResponse myMeetingResponse = MyMeetingResponse.of(
-                meeting,
-                loginParticipant.getIsMaster(),
-                isActive,
-                eventResponse
-        );
-
-        return null;
     }
 
     @Transactional
