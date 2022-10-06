@@ -1,6 +1,7 @@
 package com.woowacourse.moragora.support.fixture;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
+import com.woowacourse.moragora.domain.participant.Participants;
 
 public enum MeetingFixtures {
 
@@ -18,6 +19,7 @@ public enum MeetingFixtures {
     public Meeting create() {
         return Meeting.builder()
                 .name(this.name)
+                .participants(new Participants())
                 .build();
     }
 }

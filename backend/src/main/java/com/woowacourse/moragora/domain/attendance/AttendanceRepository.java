@@ -15,6 +15,8 @@ public interface AttendanceRepository extends Repository<Attendance, Long> {
 
     List<Attendance> saveAll(final Iterable<Attendance> attendances);
 
+    List<Attendance> findAll();
+
     Optional<Attendance> findByParticipantIdAndEventId(final Long participantId, final Long eventId);
 
     // TODO: participantIds 대신 meetingId를 통한 조회

@@ -10,6 +10,7 @@ import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.meeting.MeetingRepository;
 import com.woowacourse.moragora.domain.participant.Participant;
 import com.woowacourse.moragora.domain.participant.ParticipantRepository;
+import com.woowacourse.moragora.domain.participant.Participants;
 import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.domain.user.UserRepository;
@@ -86,7 +87,6 @@ public class MeetingService {
      *
      * 불필요한 Attendance 쿼리까지 가지고 옴 !
      * M -> P -> A
-     *
      */
     public MeetingResponse findById_v1_1(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
@@ -105,68 +105,39 @@ public class MeetingService {
         );
     }
 
-    public MeetingResponse findById_v1_2(final Long meetingId, final Long loginId) {
+    public MeetingResponse findById(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-        final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
+
+        // q#1
+        final Participants participants = new Participants(queryRepository.findParticipantAndAll4(meetingId));
+
+        final List<Participant> participantss = queryRepository.findParticipantAndAll4(meetingId);
+        final Meeting meeting2 = participantss.get(0).getMeeting(); // force init
+        final Meeting meeting1 = new Meeting(meeting2.getName(), participantss);
+
+//        meeting1.~~~
+
+//        final Meeting meeting = participants.toMeeting();
+
+//        final Participant loginParticipant = meeting.findParticipant(loginId).orElseThrow(ParticipantNotFoundException::new);
+        // tobe
+        final Participant loginParticipant = participants.findParticipant(loginId).orElseThrow(ParticipantNotFoundException::new);
+
+        // q#2
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
+        final Meeting meeting = loginParticipant.getMeeting();
 
         meeting.calculateTardy();
+
+        final Participants participants1 = meeting.getParticipants();// ps
+        participants1.calculateTardy();
+        ps
 
         return MeetingResponse.from(
                 meeting,
                 attendedEventCount,
                 loginParticipant.getIsMaster()
         );
-    }
-
-    public MeetingResponse findById_v2(final Long meetingId, final Long loginId) {
-        final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-        final Participant loginParticipant = meeting.findParticipant(loginId)
-                .orElseThrow(ParticipantNotFoundException::new);
-        final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
-
-        meeting.calculateTardy();
-
-        final List<Object[]> tardyCounts = queryRepository.findTardyCount_v2(meeting.getParticipantIds(), today);
-
-        final Participant[] participants = meeting.getParticipants().toArray(Participant[]::new);
-
-        for (int i = 0; i < tardyCounts.size(); i++) {
-            final Participant participant = participants[i];
-            final int tardyCount = (int) tardyCounts.get(i)[0];
-            participant.setTardyCount(tardyCount);
-        }
-
-        return MeetingResponse.from(
-                meeting,
-                attendedEventCount,
-                loginParticipant.getIsMaster()
-        );
-    }
-
-    /**
-     * 썬이 중간에 작성한 것
-     * 1+N 쿼리가 나간다
-     */
-    public MeetingResponse findById_v3(final Long meetingId, final Long loginId) {
-        final Meeting meeting = queryRepository.findMeetingAndAllChild(meetingId)
-                .orElseThrow(MeetingNotFoundException::new);
-
-        // ...
-
-//        #1 N개의 쿼리가 나간다
-        meeting.getParticipantIds().forEach(it -> {
-            int size = queryRepository.findTardyCount_single(it, LocalDate.now());
-            System.out.println(size);
-        });
-
-        // ...
-        return null;
     }
 
     public MyMeetingsResponse findAllByUserId(final Long userId) {

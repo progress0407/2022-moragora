@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class ParticipantResponses {
 
     public static List<ParticipantResponse> create(final Meeting meeting) {
-        return meeting.getParticipants().stream()
+        return meeting.getParticipants().value().stream()
                 .map(ParticipantResponse::of)
                 .collect(Collectors.toUnmodifiableList());
     }

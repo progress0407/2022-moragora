@@ -2,12 +2,9 @@ package com.woowacourse.moragora.domain.participant;
 
 import com.woowacourse.moragora.domain.attendance.Attendance;
 import com.woowacourse.moragora.domain.meeting.Meeting;
-import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +47,7 @@ public class Participant {
 
     @Transient
     @Setter
-    private int tardyCount;
+    private Integer tardyCount = null;
 
     public Participant(final User user, final Meeting meeting, final boolean isMaster) {
         this.user = user;
@@ -58,11 +55,19 @@ public class Participant {
         this.isMaster = isMaster;
     }
 
+    public Participant(final Participant participant, final long tardyCount) {
+        this.id = participant.id;
+        this.isMaster = participant.isMaster;
+        this.user = participant.user;
+        this.meeting = participant.meeting;
+        this.tardyCount = (int) tardyCount;
+    }
+
     public void mapMeeting(final Meeting meeting) {
         this.meeting = meeting;
 
-        if (!meeting.getParticipants().contains(this)) {
-            meeting.getParticipants().add(this);
+        if (!meeting.getParticipants().value().contains(this)) {
+            meeting.getParticipants().value().add(this);
         }
     }
 
@@ -72,6 +77,13 @@ public class Participant {
 
     public void calculateTardy() {
         this.tardyCount = (int) attendances.stream()
+                .filter(Attendance::isTardy)
+                .filter(Attendance::isEnabled)
+                .count();
+    }
+
+    public Integer calculateTardyAndGet() {
+        return  (int) attendances.stream()
                 .filter(Attendance::isTardy)
                 .filter(Attendance::isEnabled)
                 .count();

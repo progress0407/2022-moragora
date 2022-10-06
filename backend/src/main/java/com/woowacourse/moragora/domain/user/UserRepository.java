@@ -10,6 +10,8 @@ public interface UserRepository extends Repository<User, Long> {
 
     User save(final User user);
 
+    List<User> findAll();
+
     Optional<User> findById(final Long id);
 
     List<User> findByIdIn(final List<Long> ids);

@@ -1,5 +1,6 @@
 package com.woowacourse.moragora.domain.participant;
 
+import com.woowacourse.moragora.domain.attendance.Attendance;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface ParticipantRepository extends Repository<Participant, Long> {
 
     Participant save(final Participant participant);
+
+    List<Participant> findAll();
 
     List<Participant> findByMeetingId(final Long meetingId);
 

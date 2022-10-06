@@ -198,24 +198,31 @@ class MeetingServiceTest {
                 .isEqualTo(expectedMeetingResponse);
     }
 
-    @DisplayName("id로 모임 상세 정보를 조회한다.")
+    @DisplayName("id로 모임 상세 정보를 조회한다. (case 2)")
     @Test
     void findById_2() {
         // given
         final Meeting meeting = dataSupport.saveMeeting(MORAGORA.create());
         final User user = dataSupport.saveUser(KUN.create());
+        final User user2 = dataSupport.saveUser(PHILLZ.create());
         final Participant participant = dataSupport.saveParticipant(user, meeting, true);
+        final Participant participant2 = dataSupport.saveParticipant(user2, meeting, false);
         final Event event1 = dataSupport.saveEvent(EVENT1.create(meeting));
         final Event event2 = dataSupport.saveEvent(EVENT2.create(meeting));
         final Event event3 = dataSupport.saveEvent(EVENT3.create(meeting));
         dataSupport.saveAttendance(participant, event1, Status.TARDY);
         dataSupport.saveAttendance(participant, event2, Status.TARDY);
         dataSupport.saveAttendance(participant, event3, Status.TARDY);
+        dataSupport.saveAttendance(participant2, event1, Status.PRESENT);
+        dataSupport.saveAttendance(participant2, event2, Status.PRESENT);
+        dataSupport.saveAttendance(participant2, event3, Status.PRESENT);
 
         final MeetingResponse expectedMeetingResponse = MeetingResponse.builder()
                 .id(meeting.getId())
                 .name(meeting.getName())
-                .participantResponses(List.of(ParticipantResponse.of(participant, 3)))
+                .participantResponses(List.of(
+                        ParticipantResponse.of(participant, 3),
+                        ParticipantResponse.of(participant, 0)))
                 .attendedEventCount(3)
                 .isCoffeeTime(true)
                 .isLoginUserMaster(true)

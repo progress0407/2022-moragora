@@ -2,6 +2,7 @@ package com.woowacourse.moragora.domain.query;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.participant.Participant;
+import com.woowacourse.moragora.domain.participant.Participants;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -16,39 +17,53 @@ public interface QueryRepository extends Repository<Meeting, Long> {
     @Query("delete from Meeting m where m.id = :id")
     Meeting findMeetingParticipantAttendance(final Long id);
 
-    /**
-     * 가져오는 것 기준으로...
-     * <p>
-     * Participant를 + Attendace로 1 fetch join으로 where 절을 포함해서 가져와서 다대일로 Meeting을 가져옴
-     * <p>
-     * Participat
-     */
-
-    /**
-     * M -> P ->  A
-     *
-     * P -> A
-     * where isEn & Tardy
-     *
-     * P -> M :
-     */
-    @Query("select p, count(a)"
+    @Query("select "
+            + " p, count(case when a.status = 'TARDY' then 1 end) "
             + " from Participant p "
-            + " join fetch p.attendances a"
+            + " inner join p.user u "
+            + " inner join p.meeting m "
+            + " left join p.attendances a "
             + " where p.meeting.id = :meetingId "
-            + "  and p.id in :participantIds "
-            + "  and a.status = 'TARDY'"
-            + "  and a.disabled = false"
-            + " group by p"
+            + "   and a.disabled = false "
+            + " group by p "
     )
-    Optional<Participant> findParticipantAndAll(@Param("meetingId") Long meetingId);
+    List<Participant> findParticipantAndAll(@Param("meetingId") Long meetingId);
+
+    @Query("select "
+            + " p, count(case when a.status = 'TARDY' then 1 end) "
+            + " from Participant p "
+            + " inner join p.user u "
+            + " inner join p.meeting m "
+            + " left join p.attendances a "
+            + " where p.meeting.id = :meetingId "
+            + "   and a.disabled = false "
+            + " group by p "
+    )
+    List<Object[]> findParticipantAndAll2(@Param("meetingId") Long meetingId);
 
     /**
-     * case when m.age <= 10 then '학생요금'
-     *  when m.age >= 60 then '경로요금'
-     *  else '일반요금'
-     *  end
+     * count를 가져오지 못한다 ㅠ
      */
+    @Query("select "
+            + " p, (select count(a) from Attendance a where a.status = 'TARDY' and a.disabled = false)"
+            + " from Participant p "
+            + " inner join fetch p.user u "
+            + " inner join fetch p.meeting m "
+            + " where p.meeting.id = :meetingId ")
+    List<Participant> findParticipantAndAll3(@Param("meetingId") Long meetingId);
+
+    @Query("select "
+            + " distinct p"
+            + " from Participant p "
+            + " inner join fetch p.user u "
+            + " inner join fetch p.meeting m "
+            + " left  join fetch p.attendances a "
+            + " where p.meeting.id = :meetingId "
+            + " and   a.status = 'TARDY'"
+            + " and   a.disabled = false ")
+    List<Participant> findParticipantAndAll4(@Param("meetingId") Long meetingId);
+
+
     @Query("select "
             + " a.participant.id, "
             + " case "
