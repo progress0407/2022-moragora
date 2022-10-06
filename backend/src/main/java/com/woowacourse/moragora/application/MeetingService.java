@@ -85,11 +85,8 @@ public class MeetingService {
     public MeetingResponse findById(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
 
-        // q#1
         final Participants participants = new Participants(queryRepository.findParticipantAndAll(meetingId));
-        final Participant loginParticipant = participants.findParticipant(loginId).orElseThrow(ParticipantNotFoundException::new);
-
-        // q#2
+        final Participant loginParticipant = participants.findOne(loginId).orElseThrow(ParticipantNotFoundException::new);
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
         final Meeting meeting = loginParticipant.getMeeting();
 
@@ -97,6 +94,7 @@ public class MeetingService {
 
         return MeetingResponse.from(
                 meeting,
+                participants,
                 attendedEventCount,
                 loginParticipant.getIsMaster()
         );

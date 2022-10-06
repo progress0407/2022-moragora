@@ -43,23 +43,11 @@ public class MyMeetingResponse {
                                        final EventResponse upcomingEvent) {
 
         return new MyMeetingResponse(
-                meeting.getId(), meeting.getName(),
-                tardyCount, isLoginUserMaster, isCoffeeTime, isActive,
-                upcomingEvent
-        );
-    }
-
-    public static MyMeetingResponse of(final Meeting meeting,
-                                       final boolean isLoginUserMaster,
-                                       final boolean isActive,
-                                       final EventResponse upcomingEvent) {
-
-        return new MyMeetingResponse(
                 meeting.getId(),
                 meeting.getName(),
-                meeting.getTotalTardyCount(),
+                tardyCount,
                 isLoginUserMaster,
-                meeting.isTardyStackFull(),
+                isCoffeeTime,
                 isActive,
                 upcomingEvent
         );

@@ -4,8 +4,8 @@ import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.query.QueryRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import lombok.Getter;
@@ -43,12 +43,9 @@ public class Participants {
     }
 
     public void calculateTardy(final QueryRepository queryRepository) {
-        final List<Map<Long, Long>> countMap = queryRepository.findParticipantAndAttendanceCount();
+        final List<Participant> newParticipants = queryRepository.findParticipantAndAttendanceCount5(participants);
 
-        for (final Participant participant : participants) {
-            participant.calculateTardy();
-        }
-
+        this.participants = newParticipants;
         this.totalTardyCount = calculateTotalTardyCount();
 
         if (isTardyStackFullCondition()) {
@@ -56,7 +53,7 @@ public class Participants {
         }
     }
 
-    public Optional<Participant> findParticipant(final Long id) {
+    public Optional<Participant> findOne(final Long id) {
         return participants.stream()
                 .filter(participant -> participant.getId().equals(id))
                 .findAny();
@@ -64,6 +61,12 @@ public class Participants {
 
     public List<Participant> value() {
         return participants;
+    }
+
+    public List<Long> ids() {
+        return participants.stream()
+                .map(Participant::getId)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     private int calculateTotalTardyCount() {

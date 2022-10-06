@@ -1,6 +1,7 @@
 package com.woowacourse.moragora.dto.response.meeting;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
+import com.woowacourse.moragora.domain.participant.Participants;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.Builder;
@@ -36,14 +37,14 @@ public class MeetingResponse {
     }
 
     public static MeetingResponse from(final Meeting meeting,
-                                       final long attendedEventCount,
+                                       final Participants participants, final long attendedEventCount,
                                        final boolean isLoginUserMaster) {
         return new MeetingResponse(
                 meeting.getId(),
                 meeting.getName(),
                 attendedEventCount,
                 isLoginUserMaster,
-                meeting.isTardyStackFull(),
+                participants.isTardyStackFull(),
                 ParticipantResponses.create(meeting)
         );
     }

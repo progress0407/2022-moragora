@@ -2,6 +2,7 @@ package com.woowacourse.moragora.domain.query;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.participant.Participant;
+import com.woowacourse.moragora.domain.participant.ParticipantRepoDto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public interface QueryRepository extends Repository<Meeting, Long> {
     Meeting findMeetingParticipantAttendance(final Long id);
 
     @Query("select "
-            + " distinct p"
+            + " distinct p "
             + " from Participant p "
             + " inner join fetch p.user u "
             + " inner join fetch p.meeting m "
@@ -43,10 +44,39 @@ public interface QueryRepository extends Repository<Meeting, Long> {
     @Query("select p.id, count(a) "
             + "  from Participant p "
             + " left join Attendance a "
-            + "  where a.status = 'TARDY' "
+            + "  where p in :participants "
+            + "    and a.status = 'TARDY' "
             + "    and a.disabled = false "
-            + "    and a.id in :participantIds")
-    List<Map<Long, Long>> findParticipantAndAttendanceCount(@Param("meetingId") List<Long> participantIds);
+            + " group by p ")
+    List<Object[]> findParticipantAndAttendanceCount(@Param("participants") List<Participant> participants);
+
+    @Query("select p.id, count(a) "
+            + "  from Participant p "
+            + " left join Attendance a "
+            + "  where p.id in :participantIds "
+            + "    and a.status = 'TARDY' "
+            + "    and a.disabled = false "
+            + " group by p ")
+    List<Object[]> findParticipantAndAttendanceCount2(@Param("participantIds") List<Long> participantIds);
+
+    @Query("select p.id, count(a) "
+            + "  from Participant p "
+            + " left join p.attendances a "
+            + "  where p.id in :participantIds "
+            + "    and a.status = 'TARDY' "
+            + "    and a.disabled = false "
+            + " group by p ")
+    List<Map<Long, Long>> findParticipantAndAttendanceCount3(@Param("participantIds") List<Long> participantIds);
+
+    @Query("select "
+            + " new com.woowacourse.moragora.domain.participant.Participant(p, count(a)) "
+            + "  from Participant p "
+            + " left join p.attendances a "
+            + "  where p in :participants "
+            + "    and a.status = 'TARDY' "
+            + "    and a.disabled = false "
+            + " group by p.id ")
+    List<Participant> findParticipantAndAttendanceCount5(@Param("participants") List<Participant> participants);
 
     @Query("select "
             + " a.participant.id, "
