@@ -10,6 +10,7 @@ import com.woowacourse.logging.QueryCountInspector;
 import com.woowacourse.moragora.application.AttendanceService;
 import com.woowacourse.moragora.application.CommonService;
 import com.woowacourse.moragora.application.EventService;
+import com.woowacourse.moragora.application.MeetingQueryService;
 import com.woowacourse.moragora.application.MeetingService;
 import com.woowacourse.moragora.application.UserService;
 import com.woowacourse.moragora.application.auth.AuthService;
@@ -39,6 +40,9 @@ public class ControllerTest {
 
     @MockBean
     protected MeetingService meetingService;
+
+    @MockBean
+    protected MeetingQueryService meetingQueryService;
 
     @MockBean
     protected AttendanceService attendanceService;

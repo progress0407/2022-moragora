@@ -60,7 +60,7 @@ public class EventService {
 
         updateEvent(requestEvents, existingEvents);
         final List<Event> savedEvents = eventRepository.saveAll(newEvents);
-        saveAllAttendances(meeting.getParticipants().value(), savedEvents);
+        saveAllAttendances(meeting.getParticipants(), savedEvents);
     }
 
     private List<Event> findExistingEvents(final EventsRequest request, final Long meetingId) {

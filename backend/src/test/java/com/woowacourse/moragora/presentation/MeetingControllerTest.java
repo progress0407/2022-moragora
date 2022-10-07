@@ -248,7 +248,7 @@ class MeetingControllerTest extends ControllerTest {
                 new MeetingResponse(id, name, attendanceCount, isMaster, false, participantResponses);
 
         final Long loginId = validateToken("1");
-        given(meetingService.findById(eq(1L), eq(loginId)))
+        given(meetingQueryService.findById(eq(1L), eq(loginId)))
                 .willReturn(meetingResponse);
 
         // when

@@ -1,9 +1,10 @@
 package com.woowacourse.moragora.dto.response.meeting;
 
 import com.woowacourse.moragora.domain.meeting.Meeting;
-import com.woowacourse.moragora.domain.participant.Participants;
+import com.woowacourse.moragora.domain.participant.Participant;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -37,15 +38,23 @@ public class MeetingResponse {
     }
 
     public static MeetingResponse from(final Meeting meeting,
-                                       final Participants participants, final long attendedEventCount,
-                                       final boolean isLoginUserMaster) {
+                                       final List<Participant> participants,
+                                       final long attendedEventCount,
+                                       final boolean isLoginUserMaster,
+                                       final boolean isTardyStackFull) {
         return new MeetingResponse(
                 meeting.getId(),
                 meeting.getName(),
                 attendedEventCount,
                 isLoginUserMaster,
-                participants.isTardyStackFull(),
-                ParticipantResponses.create(participants)
+                isTardyStackFull,
+                participantResponses(participants)
         );
+    }
+
+    public static List<ParticipantResponse> participantResponses(final List<Participant> participants) {
+        return participants.stream()
+                .map(ParticipantResponse::of)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

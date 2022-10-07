@@ -1,5 +1,6 @@
 package com.woowacourse.moragora.presentation;
 
+import com.woowacourse.moragora.application.MeetingQueryService;
 import com.woowacourse.moragora.application.MeetingService;
 import com.woowacourse.moragora.application.auth.MasterAuthorization;
 import com.woowacourse.moragora.dto.request.meeting.MasterRequest;
@@ -27,9 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController {
 
     private final MeetingService meetingService;
+    private final MeetingQueryService meetingQueryService;
 
-    public MeetingController(final MeetingService meetingService) {
+    public MeetingController(final MeetingService meetingService, final MeetingQueryService meetingQueryService) {
         this.meetingService = meetingService;
+        this.meetingQueryService = meetingQueryService;
     }
 
     @PostMapping
@@ -41,7 +44,7 @@ public class MeetingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<MeetingResponse> findOne(@PathVariable final Long id, @AuthenticationPrincipal Long loginId) {
-        final MeetingResponse meetingResponse = meetingService.findById(id, loginId);
+        final MeetingResponse meetingResponse = meetingQueryService.findById(id, loginId);
         return ResponseEntity.ok(meetingResponse);
     }
 

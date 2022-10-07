@@ -24,7 +24,7 @@ class ParticipantTest {
         participant.mapMeeting(meeting);
 
         // then
-        assertThat(meeting.getParticipants().value()).hasSize(1);
+        assertThat(meeting.getParticipants()).hasSize(1);
     }
 
     @DisplayName("Meeting 목록에 이미 Participant가 있으면 포함하지 않는다.")
@@ -41,6 +41,6 @@ class ParticipantTest {
         participant.mapMeeting(meeting);
 
         // then
-        assertThat(meeting.getParticipants().value()).hasSize(1);
+        assertThat(meeting.getParticipants()).hasSize(1);
     }
 }

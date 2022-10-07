@@ -1,19 +1,16 @@
 package com.woowacourse.moragora.domain.meeting;
 
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.Participants;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,8 +39,7 @@ public class Meeting {
     @Column(nullable = false)
     private String name;
 
-    @Embedded
-    private Participants participants = new Participants();
+    private List<Participant> participants = new ArrayList<>();
 
     @Builder
     public Meeting(final Long id, final String name) {
@@ -56,22 +52,13 @@ public class Meeting {
         this(null, name);
     }
 
-    public static Meeting from(final Participants participants) {
-        final List<Participant> participantValues = participants.value();
-        if (participantValues.isEmpty()) {
-            throw new IllegalArgumentException("participants가 존재하지 않을 경우 Meeting을 생성할 수 없습니다.");
-        }
-        final Participant firstParticipant = participantValues.get(0);
-        return firstParticipant.getMeeting();
-    }
-
     public void updateName(final String name) {
         validateName(name);
         this.name = name;
     }
 
     public List<Long> getParticipantIds() {
-        return participants.value().stream()
+        return participants.stream()
                 .map(Participant::getId)
                 .collect(Collectors.toUnmodifiableList());
     }
@@ -83,7 +70,7 @@ public class Meeting {
     }
 
     public Optional<Participant> findParticipant(final Long id) {
-        return participants.value().stream()
+        return participants.stream()
                 .filter(participant -> participant.getId().equals(id))
                 .findAny();
     }

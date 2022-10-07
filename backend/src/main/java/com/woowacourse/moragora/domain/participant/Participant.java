@@ -66,8 +66,8 @@ public class Participant {
     public void mapMeeting(final Meeting meeting) {
         this.meeting = meeting;
 
-        if (!meeting.getParticipants().value().contains(this)) {
-            meeting.getParticipants().value().add(this);
+        if (!meeting.getParticipants().contains(this)) {
+            meeting.getParticipants().add(this);
         }
     }
 
