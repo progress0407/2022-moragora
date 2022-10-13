@@ -65,7 +65,7 @@ class MeetingRepositoryTest {
         final Participant participant2 = dataSupport.saveParticipant(user2, meeting);
 
         // when
-        final Meeting foundMeeting = meetingRepository.findMeetingAndParticipantsById(meeting.getId()).get();
+        final Meeting foundMeeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meeting.getId()).get();
 
         // then
         assertAll(

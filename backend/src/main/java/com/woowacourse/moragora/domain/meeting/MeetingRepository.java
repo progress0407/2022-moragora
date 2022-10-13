@@ -15,8 +15,8 @@ public interface MeetingRepository extends Repository<Meeting, Long> {
 
     Optional<Meeting> findById(final Long id);
 
-    @Query("select m from Meeting m join fetch m.participants p where m.id = :id")
-    Optional<Meeting> findMeetingAndParticipantsById(@Param("id") final Long id);
+    @Query("select m from Meeting m join fetch m.participants p where m.id = :meetingId")
+    Optional<Meeting> findMeetingAndParticipantsByMeetingId(@Param("meetingId") final Long meetingId);
 
     @Query("select m "
             + " from Meeting m "

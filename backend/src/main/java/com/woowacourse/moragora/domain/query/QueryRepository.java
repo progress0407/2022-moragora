@@ -10,14 +10,16 @@ import org.springframework.data.repository.query.Param;
 
 public interface QueryRepository extends Repository<Meeting, Long> {
 
-    @Query("select p as participant, "
-            +   "(select count(a) "
-            +   "from Attendance a "
-            +   "where a.participant.id = p.id and a.status = 'TARDY' and a.disabled = false) "
-            +   "as tardyCount "
-            + "from Participant p join fetch p.user "
-            + "where p in :participants")
+    @Query("select "
+            + " p as participant, "
+            +   "( select count(a) "
+            +   "  from Attendance a "
+            +   "  where a.participant.id = p.id "
+            + "      and a.status = 'TARDY' "
+            + "      and a.disabled = false"
+            + "   ) as tardyCount "
+            + " from Participant p "
+            + " join fetch p.user "
+            + " where p in :participants ")
     List<ParticipantAndCount> countParticipantsTardy(@Param("participants") final List<Participant> participants);
-
-
 }

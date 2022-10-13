@@ -194,8 +194,8 @@ class AttendanceServiceTest {
         assertThat(response).usingRecursiveComparison()
                 .isEqualTo(new CoffeeStatsResponse(
                         List.of(
-                                new CoffeeStatResponse(user1.getId(), user1.getNickname(), 1L),
-                                new CoffeeStatResponse(user2.getId(), user2.getNickname(), 2L)
+                                new CoffeeStatResponse(user1.getId(), user1.getNickname(), 1),
+                                new CoffeeStatResponse(user2.getId(), user2.getNickname(), 2)
                         ))
                 );
     }

@@ -80,7 +80,7 @@ public class MeetingService {
 
     public MeetingResponse findById(final Long meetingId, final Long loginId) {
         final LocalDate today = serverTimeManager.getDate();
-        final Meeting meeting = meetingRepository.findMeetingAndParticipantsById(meetingId)
+        final Meeting meeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
 
         final List<ParticipantAndCount> participantAndCounts = queryRepository

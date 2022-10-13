@@ -9,7 +9,9 @@ import com.woowacourse.moragora.domain.event.EventRepository;
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.meeting.MeetingRepository;
 import com.woowacourse.moragora.domain.participant.Participant;
+import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
 import com.woowacourse.moragora.domain.participant.ParticipantRepository;
+import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.domain.user.UserRepository;
 import com.woowacourse.moragora.dto.request.user.UserAttendanceRequest;
@@ -42,6 +44,7 @@ public class AttendanceService {
     private final ParticipantRepository participantRepository;
     private final AttendanceRepository attendanceRepository;
     private final UserRepository userRepository;
+    private final QueryRepository queryRepository;
     private final ServerTimeManager serverTimeManager;
 
     public AttendanceService(final MeetingRepository meetingRepository,
@@ -49,12 +52,13 @@ public class AttendanceService {
                              final ParticipantRepository participantRepository,
                              final AttendanceRepository attendanceRepository,
                              final UserRepository userRepository,
-                             final ServerTimeManager serverTimeManager) {
+                             final QueryRepository queryRepository, final ServerTimeManager serverTimeManager) {
         this.meetingRepository = meetingRepository;
         this.eventRepository = eventRepository;
         this.participantRepository = participantRepository;
         this.attendanceRepository = attendanceRepository;
         this.userRepository = userRepository;
+        this.queryRepository = queryRepository;
         this.serverTimeManager = serverTimeManager;
     }
 
@@ -102,11 +106,30 @@ public class AttendanceService {
         attendance.changeAttendanceStatus(Status.NONE);
     }
 
-    public CoffeeStatsResponse countUsableCoffeeStack(final Long meetingId) {
+/*
+    public CoffeeStatsResponse countUsableCoffeeStack_old(final Long meetingId) {
         final MeetingAttendances meetingAttendances = findMeetingAttendancesBy(meetingId);
         validateEnoughTardyCountToDisable(meetingAttendances);
         final Map<User, Long> userCoffeeStats = meetingAttendances.countUsableAttendancesPerUsers();
         return CoffeeStatsResponse.from(userCoffeeStats);
+    }
+*/
+
+    public CoffeeStatsResponse countUsableCoffeeStack(final Long meetingId) {
+
+        final LocalDate today = serverTimeManager.getDate();
+
+        final Meeting meeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meetingId)
+                .orElseThrow(MeetingNotFoundException::new);
+
+        // TODO meetingAttendances 의 대체제 만들기
+//        validateEnoughTardyCountToDisable(meetingAttendances);
+
+        final List<ParticipantAndCount> participantAndCounts =
+                queryRepository.countParticipantsTardy(meeting.getParticipants());
+        meeting.allocateParticipantsTardyCount(participantAndCounts);
+
+        return CoffeeStatsResponse.from(meeting);
     }
 
     @Transactional
