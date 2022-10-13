@@ -29,7 +29,6 @@ import com.woowacourse.moragora.exception.user.UserNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -122,12 +121,13 @@ public class AttendanceService {
         final Meeting meeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
 
-        // TODO meetingAttendances 의 대체제 만들기
-//        validateEnoughTardyCountToDisable(meetingAttendances);
 
         final List<ParticipantAndCount> participantAndCounts =
                 queryRepository.countParticipantsTardy(meeting.getParticipants());
         meeting.allocateParticipantsTardyCount(participantAndCounts);
+
+        // TODO meetingAttendances 의 대체제 만들기
+        validateEnoughTardyCountToDisable(meeting);
 
         return CoffeeStatsResponse.from(meeting);
     }
@@ -135,7 +135,7 @@ public class AttendanceService {
     @Transactional
     public void disableUsedTardy(final Long meetingId) {
         final MeetingAttendances meetingAttendances = findMeetingAttendancesBy(meetingId);
-        validateEnoughTardyCountToDisable(meetingAttendances);
+        validateEnoughTardyCountToDisable_old(meetingAttendances);
         meetingAttendances.disableAttendances();
     }
 
@@ -156,8 +156,14 @@ public class AttendanceService {
         return new MeetingAttendances(attendances, participantIds.size());
     }
 
-    private void validateEnoughTardyCountToDisable(final MeetingAttendances attendances) {
+    private void validateEnoughTardyCountToDisable_old(final MeetingAttendances attendances) {
         if (!attendances.isTardyStackFull()) {
+            throw new InvalidCoffeeTimeException();
+        }
+    }
+
+    private void validateEnoughTardyCountToDisable(final Meeting meeting) {
+        if (!meeting.isTardyStackFull()) {
             throw new InvalidCoffeeTimeException();
         }
     }
