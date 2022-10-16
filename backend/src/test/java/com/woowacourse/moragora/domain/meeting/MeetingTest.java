@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
+import com.woowacourse.moragora.dto.projection.ParticipantAndCount;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import java.util.List;
@@ -118,6 +118,7 @@ class MeetingTest {
         participant2.allocateTardyCount(1);
 
         // when
+        meeting.calculateTardy();
         final Boolean isTardyStackFull = meeting.isTardyStackFull();
 
         // then
@@ -139,6 +140,7 @@ class MeetingTest {
         participant2.allocateTardyCount(0);
 
         // when
+        meeting.calculateTardy();
         final Boolean isTardyStackFull = meeting.isTardyStackFull();
 
         // then

@@ -1,10 +1,12 @@
 package com.woowacourse.moragora.domain.meeting;
 
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
+import com.woowacourse.moragora.dto.projection.ParticipantAndCount;
+import com.woowacourse.moragora.dto.response.meeting.CoffeeStatResponse.Tuple;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -69,10 +71,17 @@ public class Meeting {
 
     public void allocateParticipantsTardyCount(final List<ParticipantAndCount> participantAndCounts) {
         participantAndCounts.forEach(it -> it.getParticipant().allocateTardyCount(it.getTardyCount()));
+        calculateTardy();
+    }
+
+    public void allocateUserTardyCount(final Map<Tuple, Long> userToTardyCount) {
+        this.tardyCount = userToTardyCount.values().stream()
+                .mapToInt(Long::intValue)
+                .sum();
     }
 
     public Boolean isTardyStackFull() {
-        return calculateTardy() >= participants.size();
+        return this.tardyCount >= participants.size();
     }
 
     public Optional<Participant> findParticipant(final Long userId) {

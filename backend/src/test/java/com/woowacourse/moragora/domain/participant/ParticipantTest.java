@@ -115,7 +115,7 @@ class ParticipantTest {
         assertThat(tardyCount).isEqualTo(5);
     }
 
-    @DisplayName("참가자의 지각 횟수 할당하기 전에 사용하려하면 예외가 발생한다.")
+    @DisplayName("참가자의 지각 횟수 할당하기 전에 사용하면 초기값인 null을 반환한다.")
     @Test
     void getTardyCount_throwsException_ifNotAllocated() {
         // given
@@ -130,8 +130,6 @@ class ParticipantTest {
         final Participant participant = new Participant(user, meeting, true);
 
         // when, then
-        assertThatThrownBy(participant::getTardyCount)
-                .isInstanceOf(BusinessException.class)
-                .hasMessage("지각 횟수가 할당되지 않았습니다.");
+        assertThat(participant.getTardyCount()).isNull();
     }
 }

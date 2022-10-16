@@ -1,5 +1,8 @@
 package com.woowacourse.moragora.application;
 
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+
 import com.woowacourse.moragora.domain.attendance.Attendance;
 import com.woowacourse.moragora.domain.attendance.AttendanceRepository;
 import com.woowacourse.moragora.domain.attendance.MeetingAttendances;
@@ -9,14 +12,16 @@ import com.woowacourse.moragora.domain.event.EventRepository;
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.meeting.MeetingRepository;
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
 import com.woowacourse.moragora.domain.participant.ParticipantRepository;
 import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.domain.user.UserRepository;
+import com.woowacourse.moragora.dto.projection.UserAndTardyCount;
 import com.woowacourse.moragora.dto.request.user.UserAttendanceRequest;
 import com.woowacourse.moragora.dto.response.attendance.AttendanceResponse;
 import com.woowacourse.moragora.dto.response.attendance.AttendancesResponse;
+import com.woowacourse.moragora.dto.response.meeting.CoffeeStatResponse;
+import com.woowacourse.moragora.dto.response.meeting.CoffeeStatResponse.Tuple;
 import com.woowacourse.moragora.dto.response.meeting.CoffeeStatsResponse;
 import com.woowacourse.moragora.exception.ClientRuntimeException;
 import com.woowacourse.moragora.exception.attendance.InvalidCoffeeTimeException;
@@ -29,7 +34,9 @@ import com.woowacourse.moragora.exception.user.UserNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,32 +112,21 @@ public class AttendanceService {
         attendance.changeAttendanceStatus(Status.NONE);
     }
 
-/*
-    public CoffeeStatsResponse countUsableCoffeeStack_old(final Long meetingId) {
-        final MeetingAttendances meetingAttendances = findMeetingAttendancesBy(meetingId);
-        validateEnoughTardyCountToDisable(meetingAttendances);
-        final Map<User, Long> userCoffeeStats = meetingAttendances.countUsableAttendancesPerUsers();
-        return CoffeeStatsResponse.from(userCoffeeStats);
-    }
-*/
-
     public CoffeeStatsResponse countUsableCoffeeStack(final Long meetingId) {
-
         final LocalDate today = serverTimeManager.getDate();
-
         final Meeting meeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
+        final List<UserAndTardyCount> userAndTardyCounts = queryRepository
+                .findUserAndTardyCount(meeting.getParticipants(), today, PageRequest.ofSize(meeting.getParticipants().size()));
+        final Map<Tuple, Long> userToTardyCount = userAndTardyCounts.stream()
+                .collect(groupingBy(it -> new CoffeeStatResponse.Tuple(it.getId(), it.getNickname()), counting()));
 
-
-        final List<ParticipantAndCount> participantAndCounts =
-                queryRepository.countParticipantsTardy(meeting.getParticipants());
-        meeting.allocateParticipantsTardyCount(participantAndCounts);
-
-        // TODO meetingAttendances 의 대체제 만들기
+        meeting.allocateUserTardyCount(userToTardyCount);
         validateEnoughTardyCountToDisable(meeting);
 
-        return CoffeeStatsResponse.from(meeting);
+        return CoffeeStatsResponse.from(userToTardyCount);
     }
+
 
     @Transactional
     public void disableUsedTardy(final Long meetingId) {
@@ -156,6 +152,7 @@ public class AttendanceService {
         return new MeetingAttendances(attendances, participantIds.size());
     }
 
+    // TODO 제거할 것
     private void validateEnoughTardyCountToDisable_old(final MeetingAttendances attendances) {
         if (!attendances.isTardyStackFull()) {
             throw new InvalidCoffeeTimeException();

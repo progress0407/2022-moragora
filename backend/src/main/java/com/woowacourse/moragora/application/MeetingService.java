@@ -6,7 +6,7 @@ import com.woowacourse.moragora.domain.event.EventRepository;
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.meeting.MeetingRepository;
 import com.woowacourse.moragora.domain.participant.Participant;
-import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
+import com.woowacourse.moragora.dto.projection.ParticipantAndCount;
 import com.woowacourse.moragora.domain.participant.ParticipantRepository;
 import com.woowacourse.moragora.domain.query.QueryRepository;
 import com.woowacourse.moragora.domain.user.User;
@@ -82,11 +82,9 @@ public class MeetingService {
         final LocalDate today = serverTimeManager.getDate();
         final Meeting meeting = meetingRepository.findMeetingAndParticipantsByMeetingId(meetingId)
                 .orElseThrow(MeetingNotFoundException::new);
-
         final List<ParticipantAndCount> participantAndCounts = queryRepository
                 .countParticipantsTardy(meeting.getParticipants());
         meeting.allocateParticipantsTardyCount(participantAndCounts);
-
         final long attendedEventCount = eventRepository.countByMeetingIdAndDateLessThanEqual(meetingId, today);
         final Participant loginParticipant = meeting.findParticipant(loginId)
                 .orElseThrow(ParticipantNotFoundException::new);

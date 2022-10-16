@@ -2,6 +2,8 @@ package com.woowacourse.moragora.domain.attendance;
 
 import com.woowacourse.moragora.domain.event.Event;
 import com.woowacourse.moragora.domain.participant.Participant;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -45,6 +48,9 @@ public class Attendance {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @OneToMany(mappedBy = "participant")
+    private final List<Attendance> attendances = new ArrayList<>();
+
     public Attendance(final Status status,
                       final Boolean disabled,
                       final Participant participant,
@@ -73,5 +79,13 @@ public class Attendance {
 
     public boolean isEnabled() {
         return !disabled;
+    }
+
+    public void mapParticipant(Participant participant) {
+        this.participant = participant;
+
+        if (!participant.getAttendances().contains(this)) {
+            participant.getAttendances().add(this);
+        }
     }
 }

@@ -1,8 +1,11 @@
 package com.woowacourse.moragora.domain.participant;
 
+import com.woowacourse.moragora.domain.attendance.Attendance;
 import com.woowacourse.moragora.domain.exception.BusinessException;
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.user.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.AccessLevel;
@@ -30,6 +34,9 @@ public class Participant {
     @Column(columnDefinition = "boolean default false")
     private Boolean isMaster;
 
+    @Transient
+    private Integer tardyCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -38,8 +45,8 @@ public class Participant {
     @JoinColumn(name = "meeting_id")
     private Meeting meeting;
 
-    @Transient
-    private Integer tardyCount;
+    @OneToMany(mappedBy = "participant")
+    private final List<Attendance> attendances = new ArrayList<>();
 
     public Participant(final User user, final Meeting meeting, final boolean isMaster) {
         this.user = user;
@@ -68,10 +75,6 @@ public class Participant {
     }
 
     public Integer getTardyCount() {
-        if (tardyCount == null) {
-            throw new BusinessException("지각 횟수가 할당되지 않았습니다.");
-        }
-
         return tardyCount;
     }
 }
