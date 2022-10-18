@@ -13,6 +13,11 @@ public class TestController {
 
     private final TestService service;
 
+    @GetMapping("/")
+    public String home() {
+        return "test";
+    }
+
     @GetMapping("/query")
     public Integer query() {
         return service.query();
