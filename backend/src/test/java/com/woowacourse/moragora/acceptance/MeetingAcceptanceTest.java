@@ -30,10 +30,13 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+@Disabled
 @DisplayName("모임 관련 기능")
 class MeetingAcceptanceTest extends AcceptanceTest {
 

@@ -28,12 +28,15 @@ import com.woowacourse.moragora.exception.event.EventNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+@Disabled
 class EventControllerTest extends ControllerTest {
 
     @DisplayName("일정들을 등록한다.")

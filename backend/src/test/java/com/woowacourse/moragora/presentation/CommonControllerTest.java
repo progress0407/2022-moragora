@@ -12,11 +12,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.woowacourse.moragora.dto.response.ServerTimeResponse;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+@Disabled
 class CommonControllerTest extends ControllerTest {
 
     @DisplayName("서버의 현재 시간을 조회한다.")

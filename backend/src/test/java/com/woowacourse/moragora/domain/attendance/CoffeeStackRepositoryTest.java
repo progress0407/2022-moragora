@@ -17,6 +17,8 @@ import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.support.DataSupport;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+@Disabled
 @Import(DataSupport.class)
 @DataJpaTest(showSql = false)
 @Transactional

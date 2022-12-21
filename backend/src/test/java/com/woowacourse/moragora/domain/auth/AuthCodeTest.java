@@ -8,10 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woowacourse.moragora.exception.auth.AuthCodeException;
 import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.mail.SimpleMailMessage;
 
+@Disabled
 class AuthCodeTest {
 
     @DisplayName("인증번호 메일을 작성한다.")

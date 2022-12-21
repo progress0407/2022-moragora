@@ -9,9 +9,11 @@ import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.support.fixture.EventFixtures;
 import com.woowacourse.moragora.support.fixture.MeetingFixtures;
 import com.woowacourse.moragora.support.fixture.UserFixtures;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class AttendanceTest {
 
     @DisplayName("Attendance 상태가 변경되는지 확인한다.")

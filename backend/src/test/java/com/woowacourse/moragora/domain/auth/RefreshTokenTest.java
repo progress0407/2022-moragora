@@ -3,10 +3,13 @@ package com.woowacourse.moragora.domain.auth;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+@Disabled
 class RefreshTokenTest {
 
     @DisplayName("만료된 토큰인지 확인한다.")

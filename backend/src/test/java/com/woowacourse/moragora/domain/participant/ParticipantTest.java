@@ -10,11 +10,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.woowacourse.moragora.domain.exception.BusinessException;
 import com.woowacourse.moragora.domain.meeting.Meeting;
 import com.woowacourse.moragora.domain.user.User;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+@Disabled
 class ParticipantTest {
 
     @DisplayName("Meeting과 Participant를 맵핑한다.")

@@ -11,9 +11,12 @@ import com.woowacourse.moragora.support.fixture.EventFixtures;
 import com.woowacourse.moragora.support.fixture.MeetingFixtures;
 import com.woowacourse.moragora.support.fixture.UserFixtures;
 import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class ParticipantAttendancesTest {
 
     @DisplayName("ParticipantAttendances 객체를 만들 때 참가자가 두명이상이라면 예외가 발생한다.")

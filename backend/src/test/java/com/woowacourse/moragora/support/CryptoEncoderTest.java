@@ -2,9 +2,11 @@ package com.woowacourse.moragora.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class CryptoEncoderTest {
 
     @DisplayName("같은 문자열을 암호화하면 같은 값이 나온다.")

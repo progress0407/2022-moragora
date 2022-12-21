@@ -28,6 +28,8 @@ import com.woowacourse.moragora.presentation.ControllerTest;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import javax.servlet.http.Cookie;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -37,6 +39,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+@Disabled
 class AuthControllerTest extends ControllerTest {
 
     @DisplayName("로그인에 성공한다.")

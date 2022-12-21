@@ -8,11 +8,13 @@ import com.woowacourse.moragora.domain.user.password.EncodedPassword;
 import com.woowacourse.moragora.domain.user.password.RawPassword;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import com.woowacourse.moragora.exception.user.AuthenticationFailureException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Disabled
 class UserTest {
 
     @DisplayName("회원을 생성한다.")

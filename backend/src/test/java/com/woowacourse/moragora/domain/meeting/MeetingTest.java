@@ -11,11 +11,14 @@ import com.woowacourse.moragora.domain.participant.ParticipantAndCount;
 import com.woowacourse.moragora.domain.user.User;
 import com.woowacourse.moragora.exception.global.InvalidFormatException;
 import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Disabled
 class MeetingTest {
 
     @DisplayName("미팅을 생성한다.")

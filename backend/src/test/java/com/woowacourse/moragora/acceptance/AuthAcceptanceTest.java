@@ -25,10 +25,13 @@ import io.restassured.response.ValidatableResponse;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Map;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+@Disabled
 @DisplayName("인증 관련 기능")
 class AuthAcceptanceTest extends AcceptanceTest {
 

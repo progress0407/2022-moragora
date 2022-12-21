@@ -7,11 +7,14 @@ import com.woowacourse.moragora.exception.auth.EmptyTokenException;
 import com.woowacourse.moragora.presentation.auth.RefreshTokenCookieProvider;
 import java.time.Duration;
 import javax.servlet.http.Cookie;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.ResponseCookie;
 
+@Disabled
 class RefreshTokenCookieProviderTest {
 
     @DisplayName("Refresh token을 받아 Response cookie를 생성한다.")

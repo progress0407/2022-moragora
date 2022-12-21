@@ -12,9 +12,12 @@ import com.woowacourse.moragora.exception.meeting.IllegalEntranceLeaveTimeExcept
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class EventTest {
 
     @DisplayName("이벤트 생성 시 시작시간이 종료시간보다 이후의 시간이라면 예외가 발생한다.")

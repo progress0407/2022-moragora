@@ -3,9 +3,11 @@ package com.woowacourse.logging;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class QueryCountInspectorTest {
 
     @DisplayName("객체가 생성되었는지 확인한다.")

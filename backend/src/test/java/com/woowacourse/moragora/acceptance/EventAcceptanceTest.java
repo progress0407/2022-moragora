@@ -25,10 +25,13 @@ import io.restassured.response.ValidatableResponse;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
+@Disabled
 class EventAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("특정 모임에 대한 일정들을 등록하고 상태코드 200을 반환한다.")
